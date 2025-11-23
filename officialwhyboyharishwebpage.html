@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Official Why Boy Harish</title>
+<style>
+body { font-family: Arial, sans-serif; background:#020d1f; color:white; margin:0; padding:20px; }
+h1 { text-align:center; color:#00ffaa; }
+.section { margin-bottom:40px; }
+button { padding:10px 20px; margin:5px; border:none; border-radius:6px; cursor:pointer; }
+#shooterCanvas { background:#000; border:2px solid #00ffaa; display:block; margin-top:10px; }
+#memoryGrid { display:grid; grid-template-columns:repeat(4,80px); gap:10px; }
+.memoryCard { width:80px; height:80px; background:#003; display:flex; justify-content:center; align-items:center; font-size:30px; cursor:pointer; border:1px solid #00ffaa; }
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;color:#00ffaa;font-size:32px;display:flex;justify-content:center;align-items:center;z-index:9999;">Loading...</div>
+
+<!-- CAPTCHA -->
+<div id="captchaScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#020d1f;color:white;text-align:center;display:none;flex-direction:column;justify-content:center;align-items:center;font-size:28px;z-index:9999;">
+<p>Verify you're human</p>
+<label style="font-size:20px;"><input type="checkbox" id="robotCheck"> I'm not a robot</label>
+<button onclick="verifyCaptcha()" style="margin-top:20px;padding:10px 20px;font-size:20px;background:#00ffaa;color:black;border:none;border-radius:8px;">Continue</button>
+</div>
+
+<script>
+window.onload = function(){ setTimeout(()=>{ document.getElementById("loadingScreen").style.display="none"; document.getElementById("captchaScreen").style.display="flex"; },1500); }
+function verifyCaptcha(){ if(document.getElementById("robotCheck").checked){ document.getElementById("captchaScreen").style.display="none"; } else alert("Please confirm you are not a robot."); }
+</script>
+
+<h1>WHY BOY HARISH: OFFICIAL WEBPAGE OF PART-1</h1><hr>
+
+<div class="section">
+<h2>Why Boy Harish Book</h2>
+<img src="https://media.bribooks.com/public/AuthorCoverImages/user_cover_6921a2afa1749_b1_v1637091.png?width=500" width="250">
+<p>The Why Boy Harish series by Viyen P and VIII-E is based of a class meme, which is very popular. Here, Harish tries everything to take revenge but it fails with bigger problems to stop the teasing.</p>
+<p><b>Cost:</b> ₹399, $25, C$28, S₹699</p>
+<a href="https://www.bribooks.com/bookstore/why-boy-harish-by-viyen-p-and-the-gang" target="_blank" style="color:#00ffaa;">Buy on Bribooks</a><br>
+</div>
+
+<div class="section">
+<h2>Indian Copyright Punishments</h2>
+Copyright laws are strict in India and as this book is coyrighted, this Why Boy idea is also copyrighted, meaning without the sole<br>
+permission of the author, no part of this book can be reproduced and this idea cannot be used or else the punishments could and will be<br>
+very severe.<br>
+<a href="https://copyright.gov.in" target="_blank" style="color:#00ffaa;">Copyright Law Reference</a>
+</div>
+
+<div class="section">
+<h2>My location</h2>
+<iframe width="400" height="300" style="border:2px solid #00ffaa;" src="https://www.google.com/maps?q=Puducherry&output=embed"></iframe>
+<p><a href="https://www.py.gov.in" style="color:#00ffaa;">Visit Puducherry</p></a>
+</div>
+
+<div class="section">
+<h2>About the Author</h2>
+<img src="https://media.bribooks.com/public/AuthorImages/author_691dda83b1484_0_1637091.png?width=160">
+<p>I am Viyen. I'm studying class 8 in the prestigious Amalorpavam Lourds Academy. I'm currently a linguist and a geographer.</p>
+<p>I've started writing books a month ago. I am 13 years old. My hometown is Puducherry in India and I can speak 5 languages fluently and<p>
+<p>18 languages non-fluently. I'm passionate of writing. My other books are:</p><br>
+1. The Great ODI: Turning Tables<br>
+2. A Motivational Drive<br>
+3. A Canadian But A Thai
+</div>
+
+<div class="section">
+<h2>Memory Game</h2>
+<div id="memoryGrid"></div>
+<script>
+let cards=["A","A","B","B","C","C","D","D"]; cards.sort(()=>Math.random()-0.5);
+let first=null, second=null, lock=false;
+let grid=document.getElementById("memoryGrid");
+cards.forEach((c,i)=>{
+ let div=document.createElement("div"); div.className="memoryCard"; div.dataset.val=c;
+ div.onclick=function(){ if(lock||div.innerText!="")return; div.innerText=c; if(!first) first=div; else { second=div; lock=true; setTimeout(()=>{ if(first.dataset.val===second.dataset.val){ } else { first.innerText=""; second.innerText=""; } first=null; second=null; lock=false; },700); }};
+ grid.appendChild(div);
+});
+</script>
+</div>
+
+<div class="section">
+<h2>Shooter Game</h2>
+<button onclick="startShooter()">▶ Play</button>
+<button onclick="pauseShooter()">⏸ Pause</button>
+<button onclick="stopShooter()">⏹ Stop</button>
+<canvas id="shooterCanvas" width="400" height="300"></canvas>
+<script>
+let shooterRunning=false, shooterPaused=false, shooterBullets=[], shooterEnemies=[], shooterX=200, shooterLoopID=null;
+const sc=document.getElementById("shooterCanvas"), sx=sc.getContext("2d");
+document.addEventListener("mousemove",e=>{ const r=sc.getBoundingClientRect(); shooterX=e.clientX-r.left; });
+document.addEventListener("click",()=>{ if(shooterRunning&&!shooterPaused) shooterBullets.push({x:shooterX,y:260}); });
+function shooterLoop(){ if(shooterPaused)return; sx.clearRect(0,0,400,300); sx.fillStyle="cyan"; sx.fillRect(shooterX-20,270,40,20);
+ shooterBullets.forEach(b=>{ b.y-=5; sx.fillStyle="yellow"; sx.fillRect(b.x-2,b.y,4,10); }); shooterBullets=shooterBullets.filter(b=>b.y>0);
+ shooterEnemies.forEach(e=>{ e.y+=2; sx.fillStyle="red"; sx.fillRect(e.x-10,e.y,20,20); }); shooterEnemies=shooterEnemies.filter(e=>e.y<300);
+ shooterBullets.forEach(b=>{ shooterEnemies.forEach((e,i)=>{ if(Math.abs(b.x-e.x)<15 && Math.abs(b.y-e.y)<15){ shooterEnemies.splice(i,1); } }); }); shooterLoopID=requestAnimationFrame(shooterLoop); }
+function startShooter(){ shooterRunning=true; shooterPaused=false; shooterEnemies=[]; shooterBullets=[]; shooterLoop(); setInterval(()=>{ if(shooterRunning&&!shooterPaused) shooterEnemies.push({x:Math.random()*380+10,y:0}); },800); }
+function pauseShooter(){ shooterPaused=true; }
+function stopShooter(){ shooterRunning=false; shooterPaused=false; cancelAnimationFrame(shooterLoopID); sx.clearRect(0,0,400,300); }
+</script>
+</div>
+
+</body>
+</html>
+
+
